@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ශ්‍රී ලංකා ගමනාගමන මණ්ඩලය - සුඛෝපභෝගී බස් රථ ධාවන මාර්ග පද්ධතිය</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Leaflet CSS (CDNJS) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  
+  <!-- App Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SLTB LANDING PORTAL SCREEN (ශ්‍රී ලංකා ගමනාගමන මණ්ඩල මුල් පිවිසුම් පිටුව)
+       ========================================================================== -->
+  <div class="landing-portal" id="landingPortal">
+    <div class="portal-container">
+      
+      <!-- Brand Crest Header with Official SLTB Logo -->
+      <div class="portal-brand-header">
+        <img src="sltb_logo.png" alt="ශ්‍රී ලංකා ගමනාගමන මණ්ඩලය" class="sltb-portal-logo">
+        <h1 class="portal-title">ශ්‍රී ලංකා ගමනාගමන මණ්ඩලය</h1>
+        <div style="font-size: 19px; font-weight: 700; color: var(--sltb-gold);">Sri Lanka Transport Board (SLTB)</div>
+        <p class="portal-subtitle">
+          යෝජිත අධිවේගී සුඛෝපභෝගී බස් රථ ධාවන මාර්ග සහ ඩිපෝ කළමනාකරණ පද්ධතිය
+        </p>
+      </div>
+
+      <!-- Role Selector Grid -->
+      <div class="role-cards-grid">
+        
+        <!-- Viewer Role Card -->
+        <div class="role-card" id="cardSelectViewer" style="--card-accent: var(--accent-cyan);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="role-icon-box">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <span class="badge badge-mode-viewer"><i class="fa-solid fa-lock"></i> View Only</span>
+          </div>
+
+          <div class="role-info">
+            <div class="role-title">සාමාන්‍ය නැරඹුම් පිවිසුම</div>
+            <div class="role-sub">Public Viewer Access</div>
+            <p class="role-desc">
+              ශ්‍රී ලංකාවේ සියලුම ඩිපෝ සහ ප්‍රාදේශික වල යෝජිත සුඛෝපභෝගී බස් රථ මාර්ග සිතියම මත නැරඹීමට, සෙවීමට සහ Highlight කර තොරතුරු පරීක්ෂා කිරීමට.
+            </p>
+          </div>
+
+          <button class="role-btn" id="btnEnterViewer">
+            <i class="fa-solid fa-map-location-dot"></i> නැරඹුම් මට්ටමෙන් පිවිසෙන්න
+          </button>
+        </div>
+
+        <!-- Admin Role Card -->
+        <div class="role-card" id="cardSelectAdmin" style="--card-accent: var(--sltb-red);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="role-icon-box" style="color: var(--sltb-red); border-color: rgba(220,38,38,0.3);">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <span class="badge badge-mode-admin"><i class="fa-solid fa-key"></i> Full Control</span>
+          </div>
+
+          <div class="role-info">
+            <div class="role-title">පරිපාලක පිවිසුම</div>
+            <div class="role-sub">SLTB Official Admin Login</div>
+            <p class="role-desc">
+              ඩිපෝ නිලධාරීන් සහ පරිපාලකයින් සඳහා අලුතින් මාර්ග ඇඳීමට (Route Drawing), Excel Sheet Upload කිරීමට, සංස්කරණය කිරීමට සහ ඉවත් කිරීමට.
+            </p>
+          </div>
+
+          <button class="role-btn" id="btnEnterAdmin" style="background: linear-gradient(135deg, #dc2626, #991b1b);">
+            <i class="fa-solid fa-right-to-bracket"></i> පරිපාලක ලෙස ලොග් වන්න
+          </button>
+        </div>
+
+      </div>
+
+      <div style="font-size: 12.5px; color: var(--text-muted); text-align: center;">
+        © 2026 ශ්‍රී ලංකා ගමනාගමන මණ්ඩලය (SLTB) - ධාවන කොට්ඨාශය
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       MAIN MAP APPLICATION INTERFACE
+       ========================================================================== -->
+  <header class="header">
+    <div class="brand">
+      <img src="sltb_logo.png" alt="SLTB Logo" class="sltb-nav-logo">
+      <div>
+        <div class="brand-title">ශ්‍රී ලංකා ගමනාගමන මණ්ඩලය - සුඛෝපභෝගී මාර්ග සිතියම</div>
+        <div class="brand-subtitle">SLTB Proposed Luxury Bus Routes & Depot Explorer</div>
+      </div>
+    </div>
+
+    <div class="header-stats">
+      <div class="stat-chip">
+        <i class="fa-solid fa-route" style="color: var(--accent-cyan);"></i>
+        <span>මාර්ග ගණන: <strong id="statRoutesCount">123</strong></span>
+      </div>
+      <div class="stat-chip">
+        <i class="fa-solid fa-bus" style="color: var(--accent-green);"></i>
+        <span>අවශ්‍ය බස් රථ: <strong id="statBusesCount">240</strong></span>
+      </div>
+      <div class="stat-chip">
+        <i class="fa-solid fa-road" style="color: var(--accent-orange);"></i>
+        <span>මුළු කි.මී: <strong id="statKmCount">38,500 km</strong></span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Mode Badge Indicator -->
+      <div id="roleBadgeIndicator" class="role-indicator-badge badge-mode-viewer">
+        <i class="fa-solid fa-eye"></i> <span>සාමාන්‍ය නැරඹුම් මට්ටම</span>
+      </div>
+
+      <!-- Admin Only Actions -->
+      <div id="adminControls" class="admin-only-actions hidden">
+        <button class="btn btn-secondary" id="btnImportExcel">
+          <i class="fa-solid fa-file-excel"></i> Import Excel / CSV
+        </button>
+        <button class="btn btn-accent" id="btnToggleDraw">
+          <i class="fa-solid fa-pen-ruler"></i> නව මාර්ගයක් අඳින්න
+        </button>
+      </div>
+
+      <!-- Switch Role / Portal Button -->
+      <button class="btn btn-secondary" id="btnSwitchRolePortal">
+        <i class="fa-solid fa-right-from-bracket"></i> <span>මුල් පිටුවට (Switch Role)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Container -->
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="මාර්ගය, නගරය හෝ ඩිපෝව සොයන්න (Search)...">
+        </div>
+        
+        <div class="filter-stack">
+          <div class="filter-group">
+            <label class="filter-label"><i class="fa-solid fa-map-location-dot"></i> ප්‍රාදේශිකය (Region Filter)</label>
+            <select class="filter-select" id="regionFilter">
+              <option value="ALL">සියලුම ප්‍රාදේශික (All Regions - 12)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label"><i class="fa-solid fa-warehouse"></i> ඩිපෝව (Depot Filter)</label>
+            <select class="filter-select" id="depotFilter">
+              <option value="ALL">සියලුම ඩිපෝ (All Depots - 64)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Route Cards List -->
+      <div class="route-list-container" id="routeList">
+        <!-- Rendered dynamically -->
+      </div>
+    </aside>
+
+    <!-- Map Container -->
+    <main class="map-container">
+      <select class="map-layer-select" id="layerSelect">
+        <option value="google_roadmap" selected>🗺️ Google Maps (Roadmap)</option>
+        <option value="google_satellite">🛰️ Google Maps (Satellite)</option>
+        <option value="google_hybrid">🛣️ Google Maps (Hybrid)</option>
+        <option value="carto_dark">🌙 Dark Mode (CartoDB)</option>
+        <option value="osm">🌐 OpenStreetMap</option>
+      </select>
+
+      <div class="map-toolbar">
+        <button class="icon-btn" id="btnResetView" title="Reset View">
+          <i class="fa-solid fa-compress"></i>
+        </button>
+        <button class="icon-btn" id="btnToggleSidebar" title="Toggle Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <!-- Drawing Tools Floating Panel -->
+      <div class="draw-panel hidden" id="drawPanel">
+        <h4 style="margin-bottom: 8px; font-size: 14px;"><i class="fa-solid fa-draw-polygon"></i> අලුත් මාර්ගයක් ඇඳීම</h4>
+        <input type="text" id="drawTitle" placeholder="මාර්ගයේ නම (උදා: කොළඹ ➔ යාපනය)">
+        <div style="display: flex; gap: 8px;">
+          <input type="color" id="drawColor" value="#007aff" style="width: 50px; padding: 2px; cursor: pointer;">
+          <select id="drawRoutingMode">
+            <option value="road">Snap to Highway Roads</option>
+            <option value="manual">Manual Points</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button class="btn btn-primary" id="btnSaveDraw" style="flex: 1;"><i class="fa-solid fa-check"></i> සුරකින්න</button>
+          <button class="btn btn-secondary" id="btnCancelDraw"><i class="fa-solid fa-xmark"></i> අවලංගු කරන්න</button>
+        </div>
+      </div>
+
+      <!-- Selected Route Info Overlay -->
+      <div class="route-info-overlay hidden" id="routeInfoOverlay">
+        <div style="width: 14px; height: 14px; border-radius: 50%; background: #007aff;" id="overlayColorDot"></div>
+        <div class="overlay-details">
+          <div class="overlay-title" id="overlayTitle">මාකුඹුර ➔ තංගල්ල</div>
+          <div class="overlay-sub" id="overlaySub">මහරගම ඩිපෝව | කොළඹ ප්‍රාදේශිකය</div>
+        </div>
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 16px;">
+          <div style="text-align: right;">
+            <div style="font-size: 16px; font-weight: 700; color: var(--accent-cyan);" id="overlayDistance">170 km</div>
+            <div style="font-size: 11px; color: var(--text-secondary);" id="overlayBuses">බස් රථ: 2</div>
+          </div>
+          <button class="icon-btn" id="btnCloseOverlay"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <!-- Admin Login Modal Dialog -->
+  <div class="modal-backdrop hidden" id="adminLoginModal">
+    <div class="modal-box" style="width: 420px;">
+      <h3 style="display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fa-solid fa-user-shield" style="color: var(--sltb-red);"></i> පරිපාලක පිවිසුම (Admin Login)</span>
+        <button class="icon-btn" id="btnCloseLoginModal"><i class="fa-solid fa-xmark"></i></button>
+      </h3>
+      <p style="font-size: 13px; color: var(--text-secondary);">
+        මාර්ග සංස්කරණය කිරීමට සහ Excel ගොනු එක් කිරීමට කරුණාකර Admin ගිණුමට පිවිසෙන්න.
+      </p>
+
+      <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="form-group">
+          <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">පරිශීලක නමය (Username)</label>
+          <input type="text" id="loginUsername" value="admin" required placeholder="Username" style="width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">මුරපදය (Password)</label>
+          <input type="password" id="loginPassword" value="admin123" required placeholder="Password" style="width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+        </div>
+
+        <div id="loginErrorMsg" style="font-size: 13px; color: #ff3b30; display: none;">
+          <i class="fa-solid fa-triangle-exclamation"></i> මුරපදය හෝ පරිශීලක නමය වැරදිය!
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
+          <button type="button" class="btn btn-secondary" id="btnCancelLogin">අවලංගු කරන්න</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #dc2626, #991b1b);"><i class="fa-solid fa-right-to-bracket"></i> පිවිසෙන්න (Login)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Excel Import Modal -->
+  <div class="modal-backdrop hidden" id="excelModal">
+    <div class="modal-box">
+      <h3 style="display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fa-solid fa-file-excel" style="color: var(--accent-green);"></i> Excel / CSV File Upload</span>
+        <button class="icon-btn" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+      </h3>
+      <p style="font-size: 13px; color: var(--text-secondary);">
+        ඔබගේ Excel File (.xlsx / .csv) එක මෙතැනට Drag & Drop කරන්න හෝ Select කරන්න.
+      </p>
+      
+      <div class="dropzone" id="excelDropzone">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 36px; color: var(--accent-blue); margin-bottom: 10px;"></i>
+        <div style="font-weight: 600; font-size: 14px;">Excel Sheet එක මෙතැනට දාන්න</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">(.xlsx, .xls, .csv සපෝට් කරයි)</div>
+        <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display: none;">
+      </div>
+
+      <div style="text-align: right;">
+        <button class="btn btn-secondary" id="btnSelectFile"><i class="fa-solid fa-folder-open"></i> File එක තෝරන්න</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SheetJS Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- Leaflet JS (CDNJS) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <!-- Pre-loaded SLTB Excel Data -->
+  <script src="sltb_data.js"></script>
+  <!-- Main Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
